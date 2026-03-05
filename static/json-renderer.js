@@ -71,10 +71,15 @@ export class JsonRenderer {
     } else if (item['@type']) {
       type = item['@type'];
     }
-    
-    if (type && Object.prototype.hasOwnProperty.call(this.typeRenderers, type) && 
-           typeof this.typeRenderers[type] === 'function') {
-      return this.typeRenderers[type](item, this);
+
+    // Validate type is a safe string before using it
+    if (type && typeof type === 'string' &&
+        Object.prototype.hasOwnProperty.call(this.typeRenderers, type) &&
+        typeof this.typeRenderers[type] === 'function') {
+      // Additional safety: ensure type doesn't contain potentially dangerous patterns
+      if (!/[^\w.-]/.test(type)) {
+        return this.typeRenderers[type](item, this);
+      }
     }
     
     return this.createDefaultItemHtml(item);

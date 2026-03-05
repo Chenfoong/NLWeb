@@ -163,8 +163,9 @@
       });
 
       window.addEventListener("message", (event) => {
-        // Validate message origin
-        if (event.origin !== window.location.origin && event.origin !== "null") {
+        // Validate message origin - must match window location origin
+        if (event.origin !== window.location.origin) {
+          console.warn("Blocked postMessage from disallowed origin:", event.origin);
           return;
         }
         if (event.data?.type === "widgetReady") {

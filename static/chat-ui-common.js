@@ -236,33 +236,33 @@ export class ChatUICommon {
     
     // Category badge
     const badgeColor = item.category === 'Garden' ? '#28a745' : '#007bff';
-    html += `<span style="display: inline-block; padding: 4px 12px; background-color: ${badgeColor}; color: white; border-radius: 20px; font-size: 0.85em; margin-bottom: 10px;">${item.category}</span>`;
+    html += `<span style="display: inline-block; padding: 4px 12px; background-color: ${badgeColor}; color: white; border-radius: 20px; font-size: 0.85em; margin-bottom: 10px;">${this.escapeHtml(item.category)}</span>`;
     
     // Name with link
     html += '<h4 style="margin: 10px 0;">';
     const itemUrl = item.url || (item.schema_object && item.schema_object.url);
     if (itemUrl) {
-      html += `<a href="${itemUrl}" target="_blank" style="color: #0066cc; text-decoration: none;">${item.name}</a>`;
+      html += `<a href="${this.escapeHtml(this.sanitizeUrl(itemUrl))}" target="_blank" rel="noopener noreferrer" style="color: #0066cc; text-decoration: none;">${this.escapeHtml(item.name)}</a>`;
     } else {
-      html += item.name;
+      html += this.escapeHtml(item.name);
     }
     html += '</h4>';
-    
+
     // Description
-    html += `<p style="color: #666; margin: 10px 0; line-height: 1.5;">${item.description}</p>`;
-    
+    html += `<p style="color: #666; margin: 10px 0; line-height: 1.5;">${this.escapeHtml(item.description)}</p>`;
+
     // Why recommended
     html += '<div style="background-color: #e8f4f8; padding: 10px; border-radius: 4px; margin: 10px 0;">';
     html += `<strong style="color: #0066cc;">Why recommended: </strong>`;
-    html += `<span style="color: #555;">${item.why_recommended}</span>`;
+    html += `<span style="color: #555;">${this.escapeHtml(item.why_recommended)}</span>`;
     html += '</div>';
-    
+
     // Details
     if (item.details && Object.keys(item.details).length > 0) {
       html += '<div style="margin-top: 10px; font-size: 0.9em;">';
       Object.entries(item.details).forEach(([key, value]) => {
         const formattedKey = key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ');
-        html += `<div style="color: #777; margin: 3px 0;"><strong style="color: #555;">${formattedKey}: </strong>${value}</div>`;
+        html += `<div style="color: #777; margin: 3px 0;"><strong style="color: #555;">${this.escapeHtml(formattedKey)}: </strong>${this.escapeHtml(value)}</div>`;
       });
       html += '</div>';
     }
@@ -462,7 +462,7 @@ export class ChatUICommon {
         
         // Also check for item_to_remember in query_analysis
         if (data.item_to_remember) {
-          const rememberMsg = `<div style="background-color: #e8f4f8; padding: 10px; border-radius: 6px; margin-bottom: 10px; color: #0066cc;">I will remember that: "${data.item_to_remember}"</div>`;
+          const rememberMsg = `<div style="background-color: #e8f4f8; padding: 10px; border-radius: 6px; margin-bottom: 10px; color: #0066cc;">I will remember that: "${this.escapeHtml(data.item_to_remember)}"</div>`;
           messageContent = rememberMsg + messageContent;
           bubble.innerHTML = messageContent + this.renderItems(allResults);
         }
@@ -596,7 +596,7 @@ export class ChatUICommon {
       default:
         // For other message types, just update if there's content
         if (data.content) {
-          messageContent += data.content + '\n';
+          messageContent += this.escapeHtml(data.content) + '\n';
           bubble.innerHTML = messageContent + this.renderItems(allResults);
         }
     }
