@@ -229,7 +229,7 @@ async def oauth_token_handler(request: web.Request) -> web.Response:
                 headers=headers
             ) as resp:
                 if resp.status != 200:
-                    logger.error(f"Token exchange failed for {provider}: HTTP {resp.status}")
+                    logger.error(f"Token exchange failed for {sanitize_log(provider)}: HTTP {resp.status}")
                     return web.json_response(
                         {'error': 'Token exchange failed'},
                         status=400
