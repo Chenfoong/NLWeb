@@ -304,7 +304,8 @@ export class ChatUICommon {
             const href = `/?site=${encodedSite}&query=${encodedQuery}`;
             // Add comma inside the link for better spacing, except for last item
             const siteName = index < array.length - 1 ? `${site.name},` : site.name;
-            return `<a href="${href}" target="_blank" style="color: #0066cc; text-decoration: none; margin-right: 6px;">${this.escapeHtml(siteName)}</a>`;
+            // Escape href for HTML attribute context
+            return `<a href="${this.escapeHtml(href)}" target="_blank" rel="noopener noreferrer" style="color: #0066cc; text-decoration: none; margin-right: 6px;">${this.escapeHtml(siteName)}</a>`;
           }).join(' ');
           messageContent = `Searching: ${siteLinks}\n\n`;
           bubble.innerHTML = messageContent + this.renderItems(allResults);
@@ -491,18 +492,39 @@ export class ChatUICommon {
           // Find all datacommons elements
           const datacommonsElements = doc.querySelectorAll('[datacommons-scatter], [datacommons-bar], [datacommons-line], [datacommons-pie], [datacommons-map], datacommons-scatter, datacommons-bar, datacommons-line, datacommons-pie, datacommons-map, datacommons-highlight, datacommons-ranking');
 
+          // Sanitize and append each web component
+          const sanitizeElement = (el) => {
+            // Remove event handler attributes
+            const attributes = [...el.attributes];
+            attributes.forEach(attr => {
+              if (attr.name.startsWith('on') || attr.name === 'srcdoc') {
+                el.removeAttribute(attr.name);
+              }
+            });
+            // Recursively sanitize children
+            el.querySelectorAll('*').forEach(child => {
+              const childAttrs = [...child.attributes];
+              childAttrs.forEach(attr => {
+                if (attr.name.startsWith('on') || attr.name === 'srcdoc') {
+                  child.removeAttribute(attr.name);
+                }
+              });
+            });
+            return el;
+          };
+
           // Append each web component directly
           datacommonsElements.forEach(element => {
             // Clone the element to ensure we get all attributes
             const clonedElement = element.cloneNode(true);
-            chartContainer.appendChild(clonedElement);
+            chartContainer.appendChild(sanitizeElement(clonedElement));
           });
 
           // If no datacommons elements found, try to add the raw HTML (excluding scripts)
           if (datacommonsElements.length === 0) {
             const allElements = doc.body.querySelectorAll('*:not(script)');
             allElements.forEach(element => {
-              chartContainer.appendChild(element.cloneNode(true));
+              chartContainer.appendChild(sanitizeElement(element.cloneNode(true)));
             });
           }
 
@@ -703,6 +725,7 @@ export class ChatUICommon {
       nameLink.href = this.sanitizeUrl(itemUrl);
       nameLink.textContent = item.name;
       nameLink.target = '_blank';
+      nameLink.rel = 'noopener noreferrer';
       nameLink.style.cssText = 'color: #0066cc; text-decoration: none; font-weight: bold;';
       nameLink.onmouseover = function() { this.style.textDecoration = 'underline'; };
       nameLink.onmouseout = function() { this.style.textDecoration = 'none'; };

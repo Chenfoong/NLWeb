@@ -196,6 +196,8 @@ export class JsonRenderer {
     // Safe text insertion
     titleLink.textContent = itemName;
     titleLink.className = 'item-title-link';
+    titleLink.rel = 'noopener noreferrer';
+    titleLink.target = '_blank';
     titleRow.appendChild(titleLink);
 
     // Add score badge if available and showScores is enabled
