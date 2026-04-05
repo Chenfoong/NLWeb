@@ -66,7 +66,6 @@ Most production deployments will:
 
 * [Hello world on your laptop](docs/nlweb-hello-world.md)
 * [Running it on Azure](docs/setup-azure.md)
-* [Running with Docker](docs/setup-docker.md)
 * Running on GCP — *coming soon*
 * Running on AWS — *coming soon*
 
