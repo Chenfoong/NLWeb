@@ -23,7 +23,13 @@ These instructions assume that you have Python 3.10+ installed locally.
 
     ```sh
     python -m venv myenv
-    source myenv/bin/activate    # Or on Windows: myenv\Scripts\activate
+    source myenv/bin/activate
+    ```
+
+    On Windows (cmd.exe or PowerShell):
+
+    ```cmd
+    myenv\Scripts\activate
     ```
 
 3. Go to the 'AskAgent/python' folder in NLWeb to install the dependencies. Note that this will also install the local vector database requirements used later in this example so you don't need to install them separately.
@@ -38,6 +44,12 @@ These instructions assume that you have Python 3.10+ installed locally.
     ```sh
     cd ../../
     cp .env.template .env
+    ```
+
+    On Windows (cmd.exe):
+
+    ```cmd
+    copy .env.template .env
     ```
 
 5. Update your config files (located in the config folder) to make sure your preferred providers match your .env file. There are three files that may need changes.
