@@ -58,7 +58,7 @@ PyJWT>=2.12.1
 # numpy
 
 # For Qdrant (enabled by default for qdrant_local):
-qdrant-client>=1.17.0
+qdrant-client>=1.17.1
 
 # For OpenSearch or Snowflake (both use httpx):
 # httpx>=0.28.1
